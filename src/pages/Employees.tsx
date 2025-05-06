@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Search, Filter, UserPlus, Download, ArrowUpDown } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 // Sample employee data
 const employeesData = [
@@ -147,10 +149,12 @@ export default function Employees() {
             <p className="text-gray-500 mt-1">Gerencie as informações dos funcionários</p>
           </div>
           <div className="mt-4 sm:mt-0">
-            <button className="btn-primary flex items-center">
-              <UserPlus size={16} className="mr-2" />
-              Novo Funcionário
-            </button>
+            <Link to="/employees/new">
+              <Button className="flex items-center">
+                <UserPlus size={16} className="mr-2" />
+                Novo Funcionário
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -168,14 +172,14 @@ export default function Employees() {
             </div>
             
             <div className="flex gap-2">
-              <button className="btn-outline flex items-center text-sm">
+              <Button variant="outline" className="flex items-center text-sm">
                 <Filter size={16} className="mr-2" />
                 Filtrar
-              </button>
-              <button className="btn-outline flex items-center text-sm">
+              </Button>
+              <Button variant="outline" className="flex items-center text-sm">
                 <Download size={16} className="mr-2" />
                 Exportar
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -223,9 +227,9 @@ export default function Employees() {
                     <td className="px-6 py-4 text-sm text-gray-700">{employee.hireDate}</td>
                     <td className="px-6 py-4 text-sm text-gray-700">{employee.manager}</td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-primary hover:underline text-sm font-medium">
+                      <Link to={`/employees/${employee.id}`} className="text-primary hover:underline text-sm font-medium">
                         Ver Detalhes
-                      </button>
+                      </Link>
                     </td>
                   </tr>
                 ))}
@@ -240,20 +244,22 @@ export default function Employees() {
                 Mostrando {indexOfFirstEmployee + 1}-{Math.min(indexOfLastEmployee, filteredEmployees.length)} de {filteredEmployees.length} funcionários
               </p>
               <div className="flex gap-2">
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setCurrentPage(currentPage - 1)}
                   disabled={currentPage === 1}
-                  className="px-3 py-1 text-sm rounded-md border border-gray-200 disabled:opacity-50"
                 >
                   Anterior
-                </button>
-                <button
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => setCurrentPage(currentPage + 1)}
                   disabled={currentPage === totalPages}
-                  className="px-3 py-1 text-sm rounded-md border border-gray-200 disabled:opacity-50"
                 >
                   Próxima
-                </button>
+                </Button>
               </div>
             </div>
           )}

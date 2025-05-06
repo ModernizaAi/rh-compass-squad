@@ -1,8 +1,8 @@
-
 import React from "react";
 import { Layout } from "@/components/layout/Layout";
 import { Briefcase, Users, Calendar, MapPin, Plus, ExternalLink, Search } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 // Sample job posting data
 const jobPostingsData = [
@@ -84,9 +84,11 @@ export default function Recruitment() {
             <p className="text-gray-500 mt-1">Gerenciamento de vagas e processos seletivos</p>
           </div>
           <div className="mt-4 sm:mt-0">
-            <Link to="/recruitment/create" className="btn-primary flex items-center">
-              <Plus size={16} className="mr-2" />
-              Publicar Vaga
+            <Link to="/recruitment/create">
+              <Button className="flex items-center">
+                <Plus size={16} className="mr-2" />
+                Publicar Vaga
+              </Button>
             </Link>
           </div>
         </div>
@@ -180,9 +182,9 @@ export default function Recruitment() {
                   >
                     Ver Detalhes
                   </Link>
-                  <button className="text-gray-500 hover:text-primary">
+                  <Link to={`/recruitment/job/${job.id}`} className="text-gray-500 hover:text-primary">
                     <ExternalLink size={16} />
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
