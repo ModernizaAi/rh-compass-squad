@@ -16,6 +16,9 @@ export type Employee = {
   avatar_url?: string;
 };
 
+// Tipo para criação de funcionário, sem o campo ID, pois será gerado automaticamente
+export type CreateEmployeeDTO = Omit<Employee, 'id'>;
+
 export const fetchEmployees = async () => {
   try {
     const { data, error } = await supabase
@@ -78,8 +81,9 @@ export const updateEmployee = async (id: string, employeeData: Partial<Employee>
   }
 };
 
-export const createEmployee = async (employeeData: Partial<Employee>) => {
+export const createEmployee = async (employeeData: CreateEmployeeDTO) => {
   try {
+    // Removemos a tipagem Partial<Employee> e utilizamos CreateEmployeeDTO
     const { data, error } = await supabase
       .from('profiles')
       .insert(employeeData)
