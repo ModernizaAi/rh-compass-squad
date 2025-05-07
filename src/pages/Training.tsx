@@ -175,7 +175,7 @@ export default function Training() {
                         <CardTitle className="text-lg">{course.title}</CardTitle>
                         <Badge variant={
                           course.status === "Em andamento" ? "default" :
-                          course.status === "Concluído" ? "success" : "secondary"
+                          course.status === "Concluído" ? "secondary" : "outline"
                         }>
                           {course.status}
                         </Badge>

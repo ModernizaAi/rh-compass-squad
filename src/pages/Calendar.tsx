@@ -256,39 +256,41 @@ export default function CalendarPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <TabsContent value="month" className="pt-4">
-              <div className="grid grid-cols-7 gap-0">
-                {dayNames.map((day, index) => (
-                  <div key={index} className="p-2 text-sm font-medium text-center text-gray-500">
-                    {day}
+            <Tabs value={view}>
+              <TabsContent value="month" className="pt-4">
+                <div className="grid grid-cols-7 gap-0">
+                  {dayNames.map((day, index) => (
+                    <div key={index} className="p-2 text-sm font-medium text-center text-gray-500">
+                      {day}
+                    </div>
+                  ))}
+                  {days.map((dayData, index) => (
+                    <CalendarDay 
+                      key={index} 
+                      day={dayData.day} 
+                      events={dayData.events}
+                      onClick={() => handleDayClick(dayData.day)} 
+                    />
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="week">
+                <div className="h-[600px] flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <CalendarIcon className="mx-auto h-12 w-12 mb-2 opacity-50" />
+                    <p>Visualização semanal será implementada em breve.</p>
                   </div>
-                ))}
-                {days.map((dayData, index) => (
-                  <CalendarDay 
-                    key={index} 
-                    day={dayData.day} 
-                    events={dayData.events}
-                    onClick={() => handleDayClick(dayData.day)} 
-                  />
-                ))}
-              </div>
-            </TabsContent>
-            <TabsContent value="week">
-              <div className="h-[600px] flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <CalendarIcon className="mx-auto h-12 w-12 mb-2 opacity-50" />
-                  <p>Visualização semanal será implementada em breve.</p>
                 </div>
-              </div>
-            </TabsContent>
-            <TabsContent value="day">
-              <div className="h-[600px] flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <CalendarIcon className="mx-auto h-12 w-12 mb-2 opacity-50" />
-                  <p>Visualização diária será implementada em breve.</p>
+              </TabsContent>
+              <TabsContent value="day">
+                <div className="h-[600px] flex items-center justify-center">
+                  <div className="text-center text-gray-500">
+                    <CalendarIcon className="mx-auto h-12 w-12 mb-2 opacity-50" />
+                    <p>Visualização diária será implementada em breve.</p>
+                  </div>
                 </div>
-              </div>
-            </TabsContent>
+              </TabsContent>
+            </Tabs>
           </CardContent>
         </Card>
 
