@@ -4,6 +4,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./contexts/AuthContext";
+import { ProtectedRoute } from "./components/auth/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import Employees from "./pages/Employees";
 import EmployeeForm from "./pages/EmployeeForm";
@@ -12,6 +14,8 @@ import Recruitment from "./pages/Recruitment";
 import JobPostingForm from "./pages/JobPostingForm";
 import JobPostingDetails from "./pages/JobPostingDetails";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
+import Profile from "./pages/Profile";
 
 const queryClient = new QueryClient();
 
@@ -21,16 +25,76 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/employees" element={<Employees />} />
-          <Route path="/employees/new" element={<EmployeeForm />} />
-          <Route path="/employees/:id" element={<EmployeeDetails />} />
-          <Route path="/recruitment" element={<Recruitment />} />
-          <Route path="/recruitment/create" element={<JobPostingForm />} />
-          <Route path="/recruitment/job/:id" element={<JobPostingDetails />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/auth/*" element={<Auth />} />
+            <Route 
+              path="/" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/employees" 
+              element={
+                <ProtectedRoute>
+                  <Employees />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/employees/new" 
+              element={
+                <ProtectedRoute>
+                  <EmployeeForm />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/employees/:id" 
+              element={
+                <ProtectedRoute>
+                  <EmployeeDetails />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/recruitment" 
+              element={
+                <ProtectedRoute>
+                  <Recruitment />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/recruitment/create" 
+              element={
+                <ProtectedRoute>
+                  <JobPostingForm />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/recruitment/job/:id" 
+              element={
+                <ProtectedRoute>
+                  <JobPostingDetails />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

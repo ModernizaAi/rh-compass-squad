@@ -1,29 +1,88 @@
 
-import React from "react";
-import { Bell, Search, User } from "lucide-react";
+import React, { useState } from "react";
+import { Bell, Menu, Settings, User, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useMobile } from "@/hooks/use-mobile";
 
 export function Header() {
+  const { isMobile } = useMobile();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const { user, profile, signOut } = useAuth();
+  
+  const toggleSidebar = () => {
+    const event = new CustomEvent("toggle-sidebar");
+    window.dispatchEvent(event);
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
-    <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6">
-      <div className="flex items-center gap-3 w-full max-w-md">
-        <Search size={18} className="text-gray-500" />
-        <input
-          type="text"
-          placeholder="Buscar..."
-          className="flex-1 text-sm focus:outline-none"
-        />
-      </div>
-      
-      <div className="flex items-center gap-4">
-        <button className="relative p-1 rounded-full hover:bg-gray-100 transition-colors">
-          <Bell size={20} className="text-gray-600" />
-          <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
-        </button>
-        
-        <div className="h-8 w-8 bg-gray-200 rounded-full flex items-center justify-center">
-          <User size={16} className="text-gray-500" />
+    <header className="bg-white border-b border-gray-100 py-2.5 px-4 h-16 flex items-center justify-between shadow-sm">
+      <div className="flex items-center">
+        {isMobile && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="mr-2"
+            onClick={toggleSidebar}
+          >
+            <Menu />
+            <span className="sr-only">Toggle menu</span>
+          </Button>
+        )}
+        <div className="hidden md:block">
+          <h1 className="text-lg font-medium">CompassHR</h1>
         </div>
+      </div>
+
+      <div className="flex items-center space-x-2">
+        <Button variant="ghost" size="icon">
+          <Bell size={20} />
+          <span className="sr-only">Notificações</span>
+        </Button>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <User size={20} />
+              <span className="sr-only">Perfil</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <div className="px-3 py-2">
+              <p className="font-medium">
+                {profile ? `${profile.first_name} ${profile.last_name}` : user?.email}
+              </p>
+              <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+              <Link to="/profile" className="w-full cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
+                <span>Meu Perfil</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/settings" className="w-full cursor-pointer">
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Configurações</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={signOut} className="cursor-pointer text-red-600">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Sair</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
