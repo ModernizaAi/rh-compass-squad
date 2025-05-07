@@ -16,8 +16,22 @@ export type Employee = {
   avatar_url?: string;
 };
 
-// Tipo para criação de funcionário, sem o campo ID, pois será gerado automaticamente
+// Tipo para criação de funcionário, sem incluir o campo ID que será gerado pelo banco
 export type CreateEmployeeDTO = Omit<Employee, 'id'>;
+
+// Tipo que corresponde exatamente ao que o Supabase aceita
+type SupabaseProfileInsert = {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  position?: string;
+  department?: string;
+  status?: "active" | "inactive" | "on_leave";
+  hire_date?: string;
+  salary?: number;
+  phone?: string;
+  avatar_url?: string;
+};
 
 export const fetchEmployees = async () => {
   try {
@@ -83,10 +97,23 @@ export const updateEmployee = async (id: string, employeeData: Partial<Employee>
 
 export const createEmployee = async (employeeData: CreateEmployeeDTO) => {
   try {
-    // Removemos a tipagem Partial<Employee> e utilizamos CreateEmployeeDTO
+    // Convertemos CreateEmployeeDTO para o tipo que o Supabase aceita
+    const profileData: SupabaseProfileInsert = {
+      first_name: employeeData.first_name,
+      last_name: employeeData.last_name,
+      email: employeeData.email,
+      position: employeeData.position,
+      department: employeeData.department,
+      status: employeeData.status,
+      hire_date: employeeData.hire_date,
+      salary: employeeData.salary,
+      phone: employeeData.phone,
+      avatar_url: employeeData.avatar_url
+    };
+    
     const { data, error } = await supabase
       .from('profiles')
-      .insert(employeeData)
+      .insert(profileData)
       .select();
       
     if (error) {
