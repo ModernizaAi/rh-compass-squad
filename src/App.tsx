@@ -24,6 +24,7 @@ import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
 import Documents from "./pages/Documents";
 import Payroll from "./pages/Payroll";
+import EmployeePortal from "./pages/EmployeePortal";
 
 const queryClient = new QueryClient();
 
@@ -154,6 +155,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Payroll />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/employee-portal" 
+                element={
+                  <ProtectedRoute>
+                    <EmployeePortal />
                   </ProtectedRoute>
                 } 
               />
