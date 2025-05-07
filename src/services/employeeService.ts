@@ -19,8 +19,9 @@ export type Employee = {
 // Tipo para criação de funcionário, sem incluir o campo ID que será gerado pelo banco
 export type CreateEmployeeDTO = Omit<Employee, 'id'>;
 
-// Tipo que corresponde exatamente ao que o Supabase aceita
+// Tipo que corresponde exatamente ao que o Supabase aceita para inserção
 type SupabaseProfileInsert = {
+  id: string; // ID é obrigatório para inserção na tabela profiles
   first_name?: string;
   last_name?: string;
   email?: string;
@@ -97,8 +98,12 @@ export const updateEmployee = async (id: string, employeeData: Partial<Employee>
 
 export const createEmployee = async (employeeData: CreateEmployeeDTO) => {
   try {
-    // Convertemos CreateEmployeeDTO para o tipo que o Supabase aceita
+    // Gerar um UUID v4 para usar como ID do perfil
+    const newId = crypto.randomUUID();
+    
+    // Convertemos CreateEmployeeDTO para o tipo que o Supabase aceita, incluindo o ID gerado
     const profileData: SupabaseProfileInsert = {
+      id: newId,  // Adicionamos o ID gerado aqui
       first_name: employeeData.first_name,
       last_name: employeeData.last_name,
       email: employeeData.email,
