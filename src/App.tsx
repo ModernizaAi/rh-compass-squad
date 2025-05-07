@@ -21,6 +21,8 @@ import Training from "./pages/Training";
 import Calendar from "./pages/Calendar";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import Documents from "./pages/Documents";
+import Payroll from "./pages/Payroll";
 
 const queryClient = new QueryClient();
 
@@ -134,6 +136,22 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Settings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/documents" 
+              element={
+                <ProtectedRoute>
+                  <Documents />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/payroll" 
+              element={
+                <ProtectedRoute>
+                  <Payroll />
                 </ProtectedRoute>
               } 
             />
