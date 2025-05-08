@@ -6,9 +6,10 @@ export interface TabProps {
   value: string;
   children: ReactNode;
   className?: string;
+  onClick?: () => void; // Add onClick prop to the interface
 }
 
-export function Tab({ value, children, className }: TabProps) {
+export function Tab({ value, children, className, onClick }: TabProps) {
   return (
     <button
       value={value}
@@ -18,6 +19,7 @@ export function Tab({ value, children, className }: TabProps) {
         className
       )}
       data-state={value === value ? "active" : "inactive"}
+      onClick={onClick} // Add onClick handler
     >
       {children}
     </button>
@@ -68,7 +70,7 @@ export function Tabs({ value, onValueChange, children, className }: TabsProps) {
       return React.cloneElement(child, {
         onClick: () => onValueChange(child.props.value),
         "data-state": child.props.value === value ? "active" : "inactive",
-      });
+      } as Partial<TabProps>); // Cast to Partial<TabProps> to satisfy TypeScript
     }
     return child;
   });
