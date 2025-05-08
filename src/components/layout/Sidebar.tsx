@@ -79,13 +79,23 @@ export function Sidebar() {
     };
   }, []);
 
+  // Dispatch a custom event when sidebar width changes
+  useEffect(() => {
+    const event = new CustomEvent("sidebar-width-change", { 
+      detail: { isOpen } 
+    });
+    window.dispatchEvent(event);
+  }, [isOpen]);
+
+  const sidebarWidth = isOpen ? '256px' : '64px';
+
   return (
     <aside
       className={cn(
         "fixed inset-y-0 left-0 z-10 flex flex-col bg-white border-r border-gray-200 transition-all duration-300",
         isOpen ? "w-64" : "w-16"
       )}
-      style={{ width: isOpen ? '256px' : '64px' }}
+      style={{ width: sidebarWidth }}
     >
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
         <div
