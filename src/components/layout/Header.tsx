@@ -17,7 +17,7 @@ export function Header() {
   };
 
   return (
-    <header className="bg-white border-b border-gray-100 py-2.5 px-4 h-16 flex items-center justify-between shadow-sm">
+    <header className="bg-white border-b border-gray-100 py-2.5 px-4 h-16 flex items-center justify-between shadow-sm z-10">
       <div className="flex items-center">
         {isMobile && (
           <Button
