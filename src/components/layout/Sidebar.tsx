@@ -13,6 +13,7 @@ import {
   TrendingUp,
   DollarSign,
   User,
+  Bell,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
@@ -45,6 +46,7 @@ export function Sidebar() {
     { name: "Documentos", icon: <FileText size={20} />, href: "/documents" },
     { name: "Calendário", icon: <Calendar size={20} />, href: "/calendar" },
     { name: "Relatórios", icon: <BarChart2 size={20} />, href: "/reports" },
+    { name: "Notificações", icon: <Bell size={20} />, href: "/notifications" },
     { name: "Configurações", icon: <Settings size={20} />, href: "/settings" },
   ];
 

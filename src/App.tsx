@@ -25,6 +25,7 @@ import Settings from "./pages/Settings";
 import Documents from "./pages/Documents";
 import Payroll from "./pages/Payroll";
 import EmployeePortal from "./pages/EmployeePortal";
+import NotificationsAdmin from "./pages/NotificationsAdmin";
 
 const queryClient = new QueryClient();
 
@@ -163,6 +164,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <EmployeePortal />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/notifications" 
+                element={
+                  <ProtectedRoute>
+                    <NotificationsAdmin />
                   </ProtectedRoute>
                 } 
               />

@@ -1,18 +1,10 @@
 
 import React from "react";
-import { X, Calendar, User, FileText, MessageSquare } from "lucide-react";
+import { X, Calendar, User, FileText, MessageSquare, BookOpen, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-type NotificationType = "meeting" | "recruitment" | "performance" | "training" | string;
-
-export type Notification = {
-  id: number;
-  title: string;
-  message: string;
-  time: string;
-  type: NotificationType;
-  read: boolean;
-};
+import { Notification, NotificationType } from "@/services/notificationService";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 type NotificationItemProps = {
   notification: Notification;
@@ -27,15 +19,23 @@ export const getNotificationIcon = (type: NotificationType) => {
       return <User className="h-5 w-5 text-green-500" />;
     case 'performance':
       return <FileText className="h-5 w-5 text-yellow-500" />;
+    case 'training':
+      return <BookOpen className="h-5 w-5 text-purple-500" />;
+    case 'document':
+      return <FileText className="h-5 w-5 text-orange-500" />;
     default:
-      return <MessageSquare className="h-5 w-5 text-gray-500" />;
+      return <Bell className="h-5 w-5 text-gray-500" />;
   }
 };
 
 export const NotificationItem = ({ notification, onMarkAsRead }: NotificationItemProps) => {
+  const formattedTime = formatDistanceToNow(new Date(notification.created_at), {
+    addSuffix: true,
+    locale: ptBR
+  });
+
   return (
     <div 
-      key={notification.id}
       className={`p-3 border-b border-gray-100 hover:bg-gray-50 ${
         !notification.read ? 'bg-blue-50/50' : ''
       }`}
@@ -60,7 +60,7 @@ export const NotificationItem = ({ notification, onMarkAsRead }: NotificationIte
             )}
           </div>
           <p className="text-gray-600 text-sm mt-0.5">{notification.message}</p>
-          <p className="text-gray-400 text-xs mt-1">{notification.time}</p>
+          <p className="text-gray-400 text-xs mt-1">{formattedTime}</p>
         </div>
       </div>
     </div>
