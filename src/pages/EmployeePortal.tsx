@@ -14,7 +14,7 @@ export default function EmployeePortal() {
 
   return (
     <Layout>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold">Portal do Colaborador</h1>
@@ -24,28 +24,28 @@ export default function EmployeePortal() {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg border border-gray-100 shadow-soft">
-          <Tabs value={currentTab} onValueChange={setCurrentTab}>
-            <TabList className="border-b border-gray-200">
+        <div className="bg-white rounded-lg border border-gray-100 shadow-soft overflow-hidden">
+          <Tabs value={currentTab} onValueChange={setCurrentTab} className="flex flex-col">
+            <TabList className="border-b border-gray-200 flex-shrink-0 w-full overflow-x-auto">
               <Tab value="profile">Meu Perfil</Tab>
               <Tab value="requests">Solicitações</Tab>
               <Tab value="trainings">Treinamentos</Tab>
               <Tab value="documents">Documentos</Tab>
             </TabList>
             
-            <TabPanel value="profile" currentValue={currentTab}>
+            <TabPanel value="profile" currentValue={currentTab} className="flex-grow">
               <EmployeeProfile />
             </TabPanel>
             
-            <TabPanel value="requests" currentValue={currentTab}>
+            <TabPanel value="requests" currentValue={currentTab} className="flex-grow">
               <MyRequests />
             </TabPanel>
             
-            <TabPanel value="trainings" currentValue={currentTab}>
+            <TabPanel value="trainings" currentValue={currentTab} className="flex-grow">
               <MyTrainings />
             </TabPanel>
             
-            <TabPanel value="documents" currentValue={currentTab}>
+            <TabPanel value="documents" currentValue={currentTab} className="flex-grow">
               <MyDocuments />
             </TabPanel>
           </Tabs>

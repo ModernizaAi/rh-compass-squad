@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -27,9 +27,13 @@ type SidebarItem = {
 export function Sidebar() {
   const location = useLocation();
   const { profile } = useAuth();
-  const isAdmin = profile?.position?.toLowerCase().includes("diretor") || 
-                  profile?.position?.toLowerCase().includes("gerente") || 
-                  profile?.department?.toLowerCase().includes("rh");
+  
+  // Improved role detection with fallback for null profile
+  const isAdmin = profile ? (
+    profile.position?.toLowerCase().includes("diretor") || 
+    profile.position?.toLowerCase().includes("gerente") || 
+    profile.department?.toLowerCase().includes("rh")
+  ) : false;
 
   const adminNavigation: SidebarItem[] = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/" },
@@ -61,6 +65,19 @@ export function Sidebar() {
   }));
 
   const [isOpen, setIsOpen] = useState(true);
+  
+  // Add event listener for sidebar toggle from Header component
+  useEffect(() => {
+    const handleToggleSidebar = () => {
+      setIsOpen(prev => !prev);
+    };
+    
+    window.addEventListener("toggle-sidebar", handleToggleSidebar);
+    
+    return () => {
+      window.removeEventListener("toggle-sidebar", handleToggleSidebar);
+    };
+  }, []);
 
   return (
     <aside
@@ -72,8 +89,8 @@ export function Sidebar() {
       <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
         <div
           className={cn(
-            "font-semibold text-lg transition-opacity",
-            isOpen ? "opacity-100" : "opacity-0"
+            "font-semibold text-lg transition-opacity duration-300",
+            isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
           )}
         >
           RH Manager
@@ -121,9 +138,9 @@ export function Sidebar() {
             </div>
             <span
               className={cn(
-                "ml-3 text-sm font-medium text-gray-700 group-hover:text-primary transition-opacity",
+                "ml-3 text-sm font-medium text-gray-700 group-hover:text-primary transition-all duration-300",
                 item.current ? "text-primary" : "",
-                isOpen ? "opacity-100" : "opacity-0"
+                isOpen ? "opacity-100" : "opacity-0 w-0 overflow-hidden"
               )}
             >
               {item.name}
