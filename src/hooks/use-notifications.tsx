@@ -5,8 +5,7 @@ import {
   fetchNotifications, 
   markNotificationAsRead, 
   markAllNotificationsAsRead,
-  Notification,
-  NotificationType
+  Notification
 } from "@/services/notificationService";
 import { supabase } from "@/integrations/supabase/client";
 

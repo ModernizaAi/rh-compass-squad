@@ -27,7 +27,7 @@ export const fetchNotifications = async (userId: string) => {
       throw error;
     }
 
-    return data || [];
+    return data as Notification[] || [];
   } catch (error) {
     toast.error("Falha ao carregar notificações");
     console.error("Error in notification service:", error);
@@ -88,7 +88,7 @@ export const createNotification = async (notification: Omit<Notification, 'id' |
       throw error;
     }
 
-    return data?.[0] || null;
+    return data?.[0] as Notification || null;
   } catch (error) {
     toast.error("Falha ao criar notificação");
     console.error("Error in notification service:", error);
