@@ -27,14 +27,26 @@ type SidebarItem = {
 
 export function Sidebar() {
   const location = useLocation();
-  const { profile } = useAuth();
+  const { profile, user } = useAuth();
   
-  // Improved role detection with fallback for null profile
-  const isAdmin = profile ? (
-    profile.position?.toLowerCase().includes("diretor") || 
-    profile.position?.toLowerCase().includes("gerente") || 
-    profile.department?.toLowerCase().includes("rh")
-  ) : false;
+  // Identificar se o usuário é administrador baseado no email ou cargo/departamento
+  const isAdmin = React.useMemo(() => {
+    // Verificar email específico como admin
+    if (user?.email === "maurosergio.superque@gmail.com") {
+      return true;
+    }
+    
+    // Verificação anterior baseada em cargo/departamento
+    if (profile) {
+      return (
+        profile.position?.toLowerCase().includes("diretor") || 
+        profile.position?.toLowerCase().includes("gerente") || 
+        profile.department?.toLowerCase().includes("rh")
+      );
+    }
+    
+    return false;
+  }, [user, profile]);
 
   const adminNavigation: SidebarItem[] = [
     { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/" },
