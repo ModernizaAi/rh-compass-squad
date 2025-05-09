@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { User, Settings, LogOut } from "lucide-react";
+import { User, Settings, LogOut, Shield } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -14,6 +14,17 @@ import { Button } from "@/components/ui/button";
 
 export const UserMenu = () => {
   const { user, profile, signOut } = useAuth();
+
+  const getRoleLabel = () => {
+    if (!profile?.role) return '';
+    
+    switch (profile.role) {
+      case 'admin': return 'Administrador';
+      case 'manager': return 'Gestor';
+      case 'basic': return 'Colaborador';
+      default: return '';
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -29,6 +40,12 @@ export const UserMenu = () => {
             {profile ? `${profile.first_name} ${profile.last_name}` : user?.email}
           </p>
           <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+          {profile?.role && (
+            <div className="mt-1 flex items-center">
+              <Shield className="h-3 w-3 text-primary mr-1" />
+              <span className="text-xs font-medium text-primary">{getRoleLabel()}</span>
+            </div>
+          )}
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>

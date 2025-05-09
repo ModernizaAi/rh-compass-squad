@@ -14,30 +14,47 @@ import {
   DollarSign,
   User,
   Bell,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/contexts/AuthContext";
+import { useAuth, UserRole } from "@/contexts/AuthContext";
 
 type SidebarItem = {
   name: string;
   icon: React.ReactNode;
   href: string;
   current?: boolean;
+  requiredRole: UserRole;
 };
 
 export function Sidebar() {
   const location = useLocation();
-  const { profile, user } = useAuth();
+  const { profile, user, hasPermission } = useAuth();
   
-  // Identificar se o usuário é administrador baseado no email ou cargo/departamento
+  // Determinar se o usuário é administrador baseado no profile.role ou email específico
   const isAdmin = React.useMemo(() => {
-    // Verificar email específico como admin
+    // Verificar email específico como admin (compatibilidade com o sistema anterior)
     if (user?.email === "maurosergio.superque@gmail.com") {
       return true;
     }
     
-    // Verificação anterior baseada em cargo/departamento
+    // Verificar role no profile
     if (profile) {
+      return profile.role === 'admin';
+    }
+    
+    return false;
+  }, [user, profile]);
+
+  // Determinar se o usuário é gestor baseado no profile.role ou cargo/departamento
+  const isManager = React.useMemo(() => {
+    // Verificação baseada em role
+    if (profile) {
+      if (profile.role === 'admin' || profile.role === 'manager') {
+        return true;
+      }
+      
+      // Verificação anterior baseada em cargo/departamento (compatibilidade)
       return (
         profile.position?.toLowerCase().includes("diretor") || 
         profile.position?.toLowerCase().includes("gerente") || 
@@ -46,31 +63,28 @@ export function Sidebar() {
     }
     
     return false;
-  }, [user, profile]);
+  }, [profile]);
+  
+  const userRole: UserRole = isAdmin ? 'admin' : (isManager ? 'manager' : 'basic');
 
-  const adminNavigation: SidebarItem[] = [
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/" },
-    { name: "Funcionários", icon: <Users size={20} />, href: "/employees" },
-    { name: "Recrutamento", icon: <UserPlus size={20} />, href: "/recruitment" },
-    { name: "Desempenho", icon: <TrendingUp size={20} />, href: "/performance" },
-    { name: "Treinamentos", icon: <BookOpen size={20} />, href: "/training" },
-    { name: "Folha de Pagamento", icon: <DollarSign size={20} />, href: "/payroll" },
-    { name: "Documentos", icon: <FileText size={20} />, href: "/documents" },
-    { name: "Calendário", icon: <Calendar size={20} />, href: "/calendar" },
-    { name: "Relatórios", icon: <BarChart2 size={20} />, href: "/reports" },
-    { name: "Notificações", icon: <Bell size={20} />, href: "/notifications" },
-    { name: "Configurações", icon: <Settings size={20} />, href: "/settings" },
+  const allNavigation: SidebarItem[] = [
+    { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/", requiredRole: 'basic' },
+    { name: "Funcionários", icon: <Users size={20} />, href: "/employees", requiredRole: 'manager' },
+    { name: "Recrutamento", icon: <UserPlus size={20} />, href: "/recruitment", requiredRole: 'manager' },
+    { name: "Desempenho", icon: <TrendingUp size={20} />, href: "/performance", requiredRole: 'manager' },
+    { name: "Treinamentos", icon: <BookOpen size={20} />, href: "/training", requiredRole: 'basic' },
+    { name: "Folha de Pagamento", icon: <DollarSign size={20} />, href: "/payroll", requiredRole: 'manager' },
+    { name: "Documentos", icon: <FileText size={20} />, href: "/documents", requiredRole: 'basic' },
+    { name: "Calendário", icon: <Calendar size={20} />, href: "/calendar", requiredRole: 'basic' },
+    { name: "Relatórios", icon: <BarChart2 size={20} />, href: "/reports", requiredRole: 'manager' },
+    { name: "Notificações", icon: <Bell size={20} />, href: "/notifications", requiredRole: 'basic' },
+    { name: "Portal do Colaborador", icon: <User size={20} />, href: "/employee-portal", requiredRole: 'basic' },
+    { name: "Gerenciar Usuários", icon: <Shield size={20} />, href: "/user-management", requiredRole: 'admin' },
+    { name: "Configurações", icon: <Settings size={20} />, href: "/settings", requiredRole: 'basic' },
   ];
 
-  const userNavigation: SidebarItem[] = [
-    { name: "Dashboard", icon: <LayoutDashboard size={20} />, href: "/" },
-    { name: "Portal do Colaborador", icon: <User size={20} />, href: "/employee-portal" },
-    { name: "Calendário", icon: <Calendar size={20} />, href: "/calendar" },
-    { name: "Perfil", icon: <Settings size={20} />, href: "/profile" },
-  ];
-
-  // Selecionar qual menu usar baseado no papel do usuário
-  const navigation = isAdmin ? adminNavigation : userNavigation;
+  // Filtrar itens de navegação com base no nível de acesso do usuário
+  const navigation = allNavigation.filter(item => hasPermission(item.requiredRole));
 
   // Definir o item atual com base na URL atual
   const currentNavigation = navigation.map(item => ({

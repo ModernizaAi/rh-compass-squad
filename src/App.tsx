@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -27,6 +28,8 @@ import EmployeePortal from "./pages/EmployeePortal";
 import NotificationsAdmin from "./pages/NotificationsAdmin";
 import PublicJobListings from "./pages/PublicJobListings";
 import PublicJobDetails from "./pages/PublicJobDetails";
+import AccessDenied from "./pages/AccessDenied";
+import UserManagement from "./pages/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +47,8 @@ const App = () => (
               <Route path="/public/job/:id" element={<PublicJobDetails />} />
               
               <Route path="/auth/*" element={<Auth />} />
+              <Route path="/access-denied" element={<AccessDenied />} />
+              
               <Route 
                 path="/" 
                 element={
@@ -55,7 +60,7 @@ const App = () => (
               <Route 
                 path="/employees" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <Employees />
                   </ProtectedRoute>
                 } 
@@ -63,7 +68,7 @@ const App = () => (
               <Route 
                 path="/employees/new" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <EmployeeForm />
                   </ProtectedRoute>
                 } 
@@ -71,7 +76,7 @@ const App = () => (
               <Route 
                 path="/employees/:id" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <EmployeeDetails />
                   </ProtectedRoute>
                 } 
@@ -79,7 +84,7 @@ const App = () => (
               <Route 
                 path="/recruitment" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <Recruitment />
                   </ProtectedRoute>
                 } 
@@ -87,7 +92,7 @@ const App = () => (
               <Route 
                 path="/recruitment/create" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <JobPostingForm />
                   </ProtectedRoute>
                 } 
@@ -95,7 +100,7 @@ const App = () => (
               <Route 
                 path="/recruitment/job/:id" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <JobPostingDetails />
                   </ProtectedRoute>
                 } 
@@ -111,7 +116,7 @@ const App = () => (
               <Route 
                 path="/performance" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <Performance />
                   </ProtectedRoute>
                 } 
@@ -135,7 +140,7 @@ const App = () => (
               <Route 
                 path="/reports" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <Reports />
                   </ProtectedRoute>
                 } 
@@ -159,7 +164,7 @@ const App = () => (
               <Route 
                 path="/payroll" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedRoute requiredRole="manager">
                     <Payroll />
                   </ProtectedRoute>
                 } 
@@ -177,6 +182,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <NotificationsAdmin />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/user-management" 
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <UserManagement />
                   </ProtectedRoute>
                 } 
               />

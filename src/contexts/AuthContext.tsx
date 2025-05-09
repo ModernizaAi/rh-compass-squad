@@ -4,6 +4,9 @@ import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 
+// Definição dos níveis de acesso
+export type UserRole = 'basic' | 'manager' | 'admin';
+
 type Profile = {
   id: string;
   first_name: string;
@@ -11,6 +14,7 @@ type Profile = {
   position: string;
   department: string;
   avatar_url: string | null;
+  role: UserRole;
 };
 
 type AuthContextType = {
@@ -23,6 +27,8 @@ type AuthContextType = {
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error: any | null }>;
   updatePassword: (password: string) => Promise<{ error: any | null }>;
+  updateUserRole: (userId: string, role: UserRole) => Promise<{ error: any | null }>;
+  hasPermission: (requiredRole: UserRole) => boolean;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -186,6 +192,56 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Função para atualizar o papel de um usuário (somente admins e gestores)
+  const updateUserRole = async (userId: string, role: UserRole) => {
+    try {
+      // Verificar se o usuário atual tem permissão para atualizar roles
+      if (!profile || (profile.role !== 'admin' && profile.role !== 'manager')) {
+        return { 
+          error: { message: "Sem permissão para atualizar níveis de acesso." } 
+        };
+      }
+      
+      // Gestores não podem promover para admin
+      if (profile.role === 'manager' && role === 'admin') {
+        return { 
+          error: { message: "Gestores não podem promover usuários para administradores." } 
+        };
+      }
+      
+      const { error } = await supabase
+        .from("profiles")
+        .update({ role })
+        .eq("id", userId);
+        
+      if (error) {
+        console.error("Error updating user role:", error);
+        return { error };
+      }
+
+      return { error: null };
+    } catch (error) {
+      console.error("Exception during role update:", error);
+      return { error };
+    }
+  };
+  
+  // Verificar se o usuário tem permissão baseado no nível de acesso requerido
+  const hasPermission = (requiredRole: UserRole): boolean => {
+    if (!profile) return false;
+    
+    switch (profile.role) {
+      case 'admin':
+        return true; // Admins têm acesso a tudo
+      case 'manager':
+        return requiredRole !== 'admin'; // Gestores têm acesso a tudo exceto funções de admin
+      case 'basic':
+        return requiredRole === 'basic'; // Usuários básicos só têm acesso a funções básicas
+      default:
+        return false;
+    }
+  };
+
   const value = {
     session,
     user,
@@ -196,6 +252,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signOut,
     resetPassword,
     updatePassword,
+    updateUserRole,
+    hasPermission,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
