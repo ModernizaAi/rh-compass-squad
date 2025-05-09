@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -26,6 +25,8 @@ import Documents from "./pages/Documents";
 import Payroll from "./pages/Payroll";
 import EmployeePortal from "./pages/EmployeePortal";
 import NotificationsAdmin from "./pages/NotificationsAdmin";
+import PublicJobListings from "./pages/PublicJobListings";
+import PublicJobDetails from "./pages/PublicJobDetails";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,10 @@ const App = () => (
         <BrowserRouter>
           <AuthProvider>
             <Routes>
+              {/* Páginas públicas */}
+              <Route path="/public/job-listings" element={<PublicJobListings />} />
+              <Route path="/public/job/:id" element={<PublicJobDetails />} />
+              
               <Route path="/auth/*" element={<Auth />} />
               <Route 
                 path="/" 
