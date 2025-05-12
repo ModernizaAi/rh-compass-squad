@@ -9,10 +9,10 @@ export type UserRole = 'basic' | 'manager' | 'admin';
 
 type Profile = {
   id: string;
-  first_name: string;
-  last_name: string;
-  position: string;
-  department: string;
+  first_name: string | null;
+  last_name: string | null;
+  position: string | null;
+  department: string | null;
   avatar_url: string | null;
   role: UserRole;
 };
@@ -97,7 +97,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return;
       }
 
-      setProfile(data as Profile);
+      // Garantir que o perfil tenha a propriedade 'role' para evitar erros de tipo
+      setProfile({
+        id: data.id,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        position: data.position,
+        department: data.department,
+        avatar_url: data.avatar_url,
+        role: data.role as UserRole || 'basic' // Converter para UserRole e fornecer fallback
+      });
     } catch (error) {
       console.error("Error in fetchProfile:", error);
     }
